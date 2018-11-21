@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf2.sss.dao.InvoiceMapperDao">
+
+    <!--nested select 嵌套 select-->
+    <resultMap id="rmInvoice"  type="invoice" autoMapping="true">
+        <!--<association property="customer" column="customer_id" select="getCustomerId"/>-->
+        <association property="billingInfo" javaType="billingInfo" autoMapping="true" columnPrefix="billing_"/>
+    </resultMap>
+
+    <resultMap id="getCustomerId" type="customer" autoMapping="true">
+        <collection property="invoices" ofType="invoice"
+                    column="customer_id" autoMapping="true" select="getInvoiceByCustomerId" />
+    </resultMap>
+
+    <select id="getInvoiceById" resultMap="rmInvoice">
+         select * from xx_invoice;
+    </select>
+    <select id="getCustomerId" resultMap="rmInvoice">
+        select * from xx_customer where customer_id = #{id}
+    </select>
+
+    <select id="getInvoiceByCustomerId" resultMap="rmInvoice">
+         select * from xx_invoice where customer_id = #{id}
+    </select>
+
+</mapper>

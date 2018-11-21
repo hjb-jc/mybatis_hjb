@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf2.sss.dao.CommentDao">
+
+    <resultMap id="rmAuthor" type="author">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="city" column="city"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="rmAuthor">
+        select id ,name,city from sss_author
+    </select>
+
+    <resultMap id="rmBlog" type="blog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <association property="author" autoMapping="true" javaType="author"  columnPrefix="author_">
+            <!--<result property="name" column="name"/>-->
+            <!--<result property="city" column="city"/>-->
+        </association>
+        <collection property="comment" ofType="comment" autoMapping="true" columnPrefix="comment_" />
+    </resultMap>
+
+<!--
+    <resultMap id="rmBlog" type="blog">
+        <constructor>
+            <idArg column="id" javaType="int"/>
+            <arg column="title" javaType="string"/>
+            <arg column="content" javaType="string"/>
+        </constructor>
+
+        <association property="author" javaType="author"
+                     column="author_id" select="com.nf2.sss.dao.CommentDao.selectAuthorById"/>
+        <collection property="comments" ofType="comment"
+                    column="id" select="com.nf147.sss.dao.CommonDAO.selectCommentsOfBlog" />
+
+    </resultMap>
+
+    <resultMap id="rmBlogNestedSelect" type="blog">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <association property="author" javaType="author"
+                     column="author_id" select="com.nf2.sss.dao.CommentDao.selectAuthorById" />
+        <collection property="comments" ofType="comment"
+                    column="id" select="com.nf2.sss.dao.CommentDao.selectCommentsOfBlog" />
+    </resultMap>
+
+    <select id="selectAuthorById" resultType="author">
+        select id, name, city from sss_author where id=#{id}
+    </select>
+    <select id="selectCommentsOfBlog" resultType="comment">
+        select id, body from sss_comment where blog_id = #{id}
+    </select>-->
+
+    <select id="selectBologs" resultMap="rmBlog">
+         select
+          b.id,
+          b.title,
+          b.content,
+          a.id         as author_id,
+          a.name       as author_name,
+          a.city       as author_city,
+          c.id         as comment_id,
+          c.body       as comment_body
+        from
+          sss_blog b
+          left join sss_author a on b.author_id = a.id
+          left join sss_comment c on c.blog_id = b.id
+    </select>
+
+   <!-- <select id="selectBlogsNestedSelect" resultMap="rmBlogNestedSelect">
+        select
+          id, title, content, author_id
+        from
+          sss_blog
+    </select>-->
+
+
+
+    <update id="updateblog">
+       update sss_blog set content = #{content} where id = #{id}
+    </update>
+    <update id="updateblog2">
+        update sss_blog set content =#{content} where id = #{id}
+    </update>
+    <insert id="insertAuthor">
+        insert into sss_author(name,city) values (#{name},#{city})
+    </insert>
+    <delete id="deleteAuthor">
+        delete from sss_author where name=#{name}
+    </delete>
+
+</mapper>

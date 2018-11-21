@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nf2.sss.dao.CommentImp">
+    <select id="findById" parameterType="int" resultType="com.nf2.sss.eneity.Author">
+        select id ,name ,city from sss_author where id = #{id}
+    </select>
+    <select id="findByName" parameterType="string" resultType="com.nf2.sss.eneity.Author">
+        select id,name ,city from sss_author where name like #{name}
+    </select>
+    <select id="findNameAndCity" resultType="Author">
+        select id ,name,city from sss_author where name = #{name} and city = #{city}
+    </select>
+    <select id="findAll" resultType="Author">
+        select id,name,city from sss_author
+    </select>
+    <select id="findAllIdBiggerThan" resultType="Author">
+        select id ,name,city from sss_author where id > #{id} ;
+    </select>
+</mapper>
+
